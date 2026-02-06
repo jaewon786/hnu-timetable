@@ -56,6 +56,9 @@ export default function CourseDetailModal({ course, onClose }: Props) {
 
   // 온라인 과목 판별
   const isOnlineCourse = course.organizer === '교수학습원격교육센터'
+  
+  // 시간 미정 여부 체크 (isTimeConfirmed가 true여도 timeBlocks가 비어있으면 미정으로 처리)
+  const hasNoTime = !course.isTimeConfirmed || course.timeBlocks.length === 0
 
   // 충돌 상태 배지
   const hasConflict = useMemo(() => {
@@ -158,7 +161,7 @@ export default function CourseDetailModal({ course, onClose }: Props) {
           {/* 강의시간 */}
           <div>
             <span className="text-xs font-semibold text-slate-500 uppercase" style={{ display: 'block', marginBottom: '4px' }}>강의시간</span>
-            {course.isTimeConfirmed
+            {!hasNoTime
               ? renderTimeBlocks(course)
               : <span className="italic text-slate-400 text-sm">미정</span>
             }
@@ -172,7 +175,7 @@ export default function CourseDetailModal({ course, onClose }: Props) {
 
         {/* 하단 버튼 */}
         <div className="px-6 py-4">
-          {!course.isTimeConfirmed && !isOnlineCourse ? (
+          {hasNoTime && !isOnlineCourse ? (
             <div className="text-center">
               <button
                 disabled
