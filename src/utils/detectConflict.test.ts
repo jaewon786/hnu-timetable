@@ -4,11 +4,12 @@ import { type Course, type SelectedCourse } from '../types/index.ts'
 
 /** 테스트용 최소 Course 팩토리 */
 function makeCourse(overrides: Partial<Course> & { id: string }): Course {
+  const { id: courseId, ...rest } = overrides
   return {
-    id: overrides.id,
-    code: overrides.id.split('-')[0],
-    section: overrides.id.split('-')[1] ?? '01',
-    name: overrides.name ?? `과목-${overrides.id}`,
+    id: courseId,
+    code: courseId.split('-')[0],
+    section: courseId.split('-')[1] ?? '01',
+    name: rest.name ?? `과목-${courseId}`,
     college: '대학',
     department: '학과',
     major: '전공',
@@ -17,10 +18,10 @@ function makeCourse(overrides: Partial<Course> & { id: string }): Course {
     creditDetail: '3-3-0',
     professors: ['교수A'],
     category: '전필',
-    timeBlocks: overrides.timeBlocks ?? [],
+    timeBlocks: rest.timeBlocks ?? [],
     note: '',
-    isTimeConfirmed: overrides.isTimeConfirmed ?? true,
-    ...overrides,
+    isTimeConfirmed: rest.isTimeConfirmed ?? true,
+    ...rest,
   }
 }
 

@@ -2,9 +2,11 @@ import { useEffect } from 'react'
 import useAppStore from '../stores/useAppStore.ts'
 
 export default function SemesterSelector() {
-  const semesters       = useAppStore((state) => state.semesters)
+  // const semesters       = useAppStore((state) => state.semesters)
   const currentSemester = useAppStore((state) => state.currentSemester)
-  const selectSemester  = useAppStore((state) => state.selectSemester)
+  // const selectSemester  = useAppStore((state) => state.selectSemester)
+  const semesters = [currentSemester]
+  const selectSemester = (_id: string) => { /* TODO: implement */ }
 
   // 학기가 1개면 자동 선택
   useEffect(() => {
@@ -38,7 +40,7 @@ export default function SemesterSelector() {
         className="text-sm border border-slate-300 rounded-md px-3 py-1.5 bg-white text-slate-700"
       >
         <option value="">학기 선택</option>
-        {semesters.map(s => (
+        {semesters.map((s) => (
           <option key={s.id} value={s.id}>{s.label}</option>
         ))}
       </select>

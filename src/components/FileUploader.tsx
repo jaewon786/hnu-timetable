@@ -1,5 +1,4 @@
 import { type DragEvent, useState, useCallback } from 'react'
-import useAppStore from '../stores/useAppStore.ts'
 
 const ALLOWED_EXTENSIONS = ['.xlsx', '.xlsm', '.csv']
 
@@ -12,8 +11,12 @@ const STATUS_COLORS: Record<string, string> = {
 export default function FileUploader() {
   const [isDragging, setIsDragging] = useState(false)
   const [fileError, setFileError]   = useState<string | null>(null)
-  const uploadFile   = useAppStore((state) => state.uploadFile)
-  const uploadStatus = useAppStore((state) => state.uploadStatus)
+  // TODO: Implement file upload functionality
+  const uploadFile = (_file: File) => { console.log('File upload not implemented') }
+  const uploadStatus: { status: 'idle' | 'uploading' | 'success' | 'error'; message: string } = { 
+    status: 'idle', 
+    message: '' 
+  }
 
   const handleFile = useCallback((file: File) => {
     const ext = '.' + file.name.split('.').pop()?.toLowerCase()
