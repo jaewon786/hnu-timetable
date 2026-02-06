@@ -9,7 +9,7 @@ const ELECTIVE_HEADERS = ['', '과목명', '이수구분', '학수번호', '분�
 const TEACHING_HEADERS = ['', '과목명', '이수구분', '학수번호', '분반', '학-강-실', '담당교수', '강의시간', '강의실', '수강 학과(전공)', '비고']
 const ONLINE_HEADERS = ['', '교과목명', '이수구분', '학수번호', '분반', '학점-On-OFF', '담당교수', '수강인원', '주관', '회원대학', '비고']
 const CODESHARE_HEADERS = ['', '교과목명', '주관 대학', '주관학과', '학수번호', '분반', '학강실', '학년', '이수구분', '담당교원', '강의시간', '강의실']
-const MICRODEGREE_HEADERS = ['', '마이크로디그리 명', '학수번호', '교과목명', '분반', '학-강-실', '학년', '이수구분', '담당교원', '강의시간', '강의실', '비고']
+const MICRODEGREE_HEADERS = ['', '마이크로디그리 명', '교과목명', '학수번호', '분반', '학-강-실', '학년', '이수구분', '담당교원', '강의시간', '강의실', '비고']
 const COL_WIDTHS = [1.8, 8.9, 6.4, 8.0, 4.5, 6.1, 11.7, 15.4, 6.5, 9.3, 7.1, 14.3]
 // 교선 모드: 12개 열의 너비를 10개 열로 재배분
 // 교필: 1.8 + 8.9 + 6.4 + 8.0 + 4.5 + 6.1 + 11.7 + 15.4 + 6.5 + 9.3 + 7.1 + 14.3 = 100
@@ -21,8 +21,8 @@ const TEACHING_COL_WIDTHS = [1.8, 8.9, 6.4, 8.0, 4.5, 6.1, 9.3, 7.1, 14.3, 20.0,
 const ONLINE_COL_WIDTHS = [1.8, 8.9, 6.4, 8.0, 4.5, 6.1, 9.3, 6.0, 10.0, 17.0, 22.0]
 // 코드쉐어 모드: 12개 열
 const CODESHARE_COL_WIDTHS = [1.8, 15.0, 11.0, 11.0, 7.5, 4.5, 6.1, 6.0, 6.4, 9.3, 7.1, 14.3]
-// 마이크로디그리 모드: 12개 열, 단과대학(11.7) + 학과(15.4) = 27.1을 마이크로디그리 명에 할당
-const MICRODEGREE_COL_WIDTHS = [1.8, 20.0, 7.0, 15.4, 4.5, 6.1, 5.5, 5.9, 9.3, 10.2, 14.3, 0]
+// 마이크로디그리 모드: 12개 열
+const MICRODEGREE_COL_WIDTHS = [1.8, 16.7, 13.0, 7.0, 4.5, 6.1, 5.5, 5.9, 9.3, 10.2, 8.0, 12.0]
 
 interface CourseListProps {
   courses: Course[]
@@ -110,11 +110,11 @@ export default function CourseList({ courses, onCourseClick, categories = [] }: 
                           {/* 마이크로디그리 명 */}
                           <td className="px-2 py-2 text-sm text-slate-600 text-center truncate" title={course.microdegreeNames?.join(' · ') || undefined}>{course.microdegreeNames?.join(' · ') || '—'}</td>
 
-                          {/* 학수번호 */}
-                          <td className="px-2 py-2 text-sm text-slate-600 text-center whitespace-nowrap">{course.code}</td>
-
                           {/* 교과목명 */}
                           <td className="px-2 py-2 text-sm font-medium text-slate-700 text-center truncate" title={course.name}>{course.name}</td>
+
+                          {/* 학수번호 */}
+                          <td className="px-2 py-2 text-sm text-slate-600 text-center whitespace-nowrap">{course.code}</td>
 
                           {/* 분반 */}
                           <td className="px-2 py-2 text-sm text-slate-600 text-center whitespace-nowrap">{course.section}</td>
