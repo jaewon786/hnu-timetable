@@ -114,7 +114,7 @@ export default function CourseDetailModal({ course, onClose }: Props) {
     >
       <div
         ref={modalRef}
-        className="relative w-full max-w-lg mx-4 rounded-xl shadow-xl overflow-hidden"
+        className="relative w-full max-w-lg mx-2 sm:mx-4 rounded-xl shadow-xl overflow-hidden"
         style={{
           backgroundColor: 'var(--card)',
           border: '1px solid var(--border)',
@@ -127,9 +127,9 @@ export default function CourseDetailModal({ course, onClose }: Props) {
         onClick={e => e.stopPropagation()}
       >
         {/* 헤더 */}
-        <div className="px-6 pt-5 pb-3 flex items-start justify-between">
+        <div className="px-4 sm:px-6 pt-4 sm:pt-5 pb-3 flex items-start justify-between">
           <div className="flex items-center gap-2 flex-wrap">
-            <h2 id="course-detail-title" className="text-lg font-bold text-slate-800">{course.name}</h2>
+            <h2 id="course-detail-title" className="text-base sm:text-lg font-bold text-slate-800">{course.name}</h2>
             {hasConflict && (
               <span className="text-xs font-semibold px-1.5 py-0.5 rounded" style={{ backgroundColor: '#fef2f2', color: '#dc2626' }}>
                 ⚠ 충돌
@@ -143,7 +143,7 @@ export default function CourseDetailModal({ course, onClose }: Props) {
         <div style={{ borderTop: '1px solid var(--border)' }} />
 
         {/* 본문 정보 */}
-        <div className="px-6 py-4 space-y-3">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 space-y-2 sm:space-y-3">
           <InfoRow label="학수번호·분반">{course.id}</InfoRow>
           <InfoRow label="소속">
             {[course.college, course.department, course.major].filter(Boolean).join(' > ')}
@@ -175,7 +175,7 @@ export default function CourseDetailModal({ course, onClose }: Props) {
         <div style={{ borderTop: '1px solid var(--border)' }} />
 
         {/* 하단 버튼 */}
-        <div className="px-6 py-4">
+        <div className="px-4 sm:px-6 py-3 sm:py-4">
           {hasNoTime && !isOnlineCourse ? (
             <div className="text-center">
               <button

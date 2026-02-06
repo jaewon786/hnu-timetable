@@ -42,21 +42,21 @@ export default function SearchAndFilter({ filter, onChange, colleges }: Props) {
   }, [])
 
   return (
-    <div className="rounded-lg p-4" style={{ backgroundColor: 'var(--card)', border: '1px solid var(--border)' }}>
+    <div className="rounded-lg p-2 lg:p-4" style={{ backgroundColor: 'var(--card)', border: '1px solid var(--border)' }}>
       {/* 키워드 검색 */}
       <input
         type="text"
-        placeholder="과목명, 교수명, 학과명 검색..."
+        placeholder="과목명, 교수명 검색..."
         value={filter.keyword}
         onChange={e => onChange({ ...filter, keyword: e.target.value })}
-        className="w-full px-3 py-2 rounded-lg text-sm text-slate-700"
+        className="w-full px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm text-slate-700"
         style={{ border: '1px solid var(--border)', backgroundColor: 'var(--card)', outline: 'none' }}
         onFocus={e => { e.currentTarget.style.borderColor = 'var(--primary)' }}
         onBlur={e => { e.currentTarget.style.borderColor = 'var(--border)' }}
       />
 
-      {/* 필터 행들 */}
-      <div className="mt-3 space-y-2">
+      {/* 필터 행들 (데스크톱만 보임) */}
+      <div className="hidden lg:block mt-3 space-y-2">
         {/* 이수구분 */}
         <FilterRow label="이수구분">
           {CATEGORIES.map(cat => (
@@ -182,8 +182,27 @@ export default function SearchAndFilter({ filter, onChange, colleges }: Props) {
         </FilterRow>
       </div>
 
+      {/* 모바일 간단 필터 */}
+      <div className="lg:hidden mt-2">
+        <div className="flex flex-wrap gap-1">
+          {CATEGORIES.slice(0, 6).map(cat => (
+            <button
+              key={cat}
+              onClick={() => onChange({ ...filter, categories: [cat] })}
+              className="px-2 py-0.5 rounded text-xs font-medium transition-colors"
+              style={{
+                backgroundColor: filter.categories.includes(cat) ? 'var(--primary)' : '#f1f5f9',
+                color: filter.categories.includes(cat) ? 'white' : '#475569',
+              }}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* 하단: 시간확정 체크 + 초기화 */}
-      <div className="flex items-center justify-between mt-3 pt-3" style={{ borderTop: '1px solid var(--border)' }}>
+      <div className="hidden lg:flex items-center justify-between mt-3 pt-3" style={{ borderTop: '1px solid var(--border)' }}>
         <label className="flex items-center gap-2 cursor-pointer">
           <input
             type="checkbox"
@@ -210,14 +229,14 @@ export default function SearchAndFilter({ filter, onChange, colleges }: Props) {
 
 function FilterRow({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
       <span
-        className="text-xs font-semibold text-slate-500 flex-shrink-0"
-        style={{ width: '56px', textAlign: 'right' }}
+        className="text-xs font-semibold text-slate-500 flex-shrink-0 sm:text-right"
+        style={{ minWidth: '56px' }}
       >
         {label}
       </span>
-      <div className="flex flex-wrap items-center gap-1.5">{children}</div>
+      <div className="flex flex-wrap items-center gap-1 sm:gap-1.5">{children}</div>
     </div>
   )
 }
@@ -226,7 +245,7 @@ function ToggleBtn({ active, onClick, children }: { active: boolean; onClick: ()
   return (
     <button
       onClick={onClick}
-      className="px-2.5 py-1 rounded-md text-sm font-medium transition-colors"
+      className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md text-xs sm:text-sm font-medium transition-colors"
       style={{
         backgroundColor: active ? 'var(--primary)' : '#f1f5f9',
         color: active ? 'white' : '#475569',

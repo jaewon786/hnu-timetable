@@ -44,15 +44,15 @@ export default function CourseList({ courses, onCourseClick, categories = [] }: 
 
   return (
     <div className="flex flex-col h-full">
-      {/* 테이블 (스크롤 가능) */}
-      <div className="flex-1 min-h-0 overflow-auto rounded-lg" style={{ border: '1px solid var(--border)' }}>
-          <table style={{ tableLayout: 'fixed', width: '100%', minWidth: '1010px' }}>
+      {/* 데스크톱: 테이블 */}
+      <div className="hidden lg:flex flex-1 min-h-0 overflow-auto rounded-lg" style={{ border: '1px solid var(--border)' }}>
+          <table className="min-w-full lg:min-w-[1010px]" style={{ tableLayout: 'fixed', width: '100%' }}>
             <thead className="sticky top-0 z-10">
               <tr style={{ backgroundColor: 'var(--surface)' }}>
                 {HEADERS.map((h, i) => (
                   <th
                     key={i}
-                    className="px-2 py-2.5 text-xs font-semibold text-slate-500 text-center whitespace-nowrap"
+                    className="px-1 sm:px-2 py-2 sm:py-2.5 text-[10px] sm:text-xs font-semibold text-slate-500 text-center whitespace-nowrap"
                     style={{ borderBottom: '1px solid var(--border)', width: `${widths[i]}%` }}
                   >
                     {h}
@@ -308,6 +308,73 @@ export default function CourseList({ courses, onCourseClick, categories = [] }: 
               })}
             </tbody>
           </table>
+      </div>
+
+      {/* 모바일: 카드 리스트 */}
+      <div className="flex lg:hidden flex-col h-full overflow-auto gap-2 p-2">
+        {courses.length === 0 ? (
+          <div className="flex items-center justify-center h-full">
+            <p className="text-sm text-slate-400">필터 조건에 맞는 강의가 없습니다.</p>
+          </div>
+        ) : courses.map((course) => {
+          const selected = selectedCourses.find(sc => sc.course.id === course.id)
+          const isConflict = conflictCourseIds.has(course.id)
+          
+          // 시간 정보 생성
+          const timeInfo = course.isTimeConfirmed && course.timeBlocks.length > 0
+            ? course.timeBlocks.map(tb => `${tb.day}${tb.startTime.slice(0,2)}`).join(',')
+            : '미정'
+          
+          const roomInfo = course.isTimeConfirmed && course.roomRaw 
+            ? course.roomRaw 
+            : '강의실 미정'
+
+          return (
+            <div
+              key={course.id}
+              onClick={() => onCourseClick(course)}
+              className="rounded-lg p-3 cursor-pointer transition-all"
+              style={{
+                backgroundColor: selected ? selected.color + '10' : 'var(--card)',
+                border: selected ? `2px solid ${selected.color}` : '1px solid var(--border)',
+              }}
+            >
+              {/* 과목명 */}
+              <div className="flex items-start justify-between gap-2 mb-1">
+                <h3 className="font-semibold text-sm text-slate-800 flex-1">
+                  {course.name}
+                  {isConflict && (
+                    <span className="ml-1 text-xs px-1 py-0.5 rounded" style={{ backgroundColor: '#fef2f2', color: '#dc2626' }}>
+                      ⚠ 충돌
+                    </span>
+                  )}
+                </h3>
+                {selected && (
+                  <div className="flex items-center gap-0.5">
+                    <div className="w-1.5 h-4 rounded-full" style={{ backgroundColor: selected.color }} />
+                    <span className="text-xs font-bold" style={{ color: selected.color }}>✓</span>
+                  </div>
+                )}
+              </div>
+
+              {/* 교수명 */}
+              <p className="text-xs text-slate-600 mb-2">
+                {course.professors.length > 0 ? course.professors.join(', ') : '교수 미정'}
+              </p>
+
+              {/* 시간 */}
+              <p className="text-xs text-slate-700 mb-1">{timeInfo}</p>
+
+              {/* 강의실 */}
+              <p className="text-xs text-slate-600 mb-2">{roomInfo}</p>
+
+              {/* 하단 정보 */}
+              <p className="text-[10px] text-slate-500">
+                {course.year === '전체' ? '전체' : `${course.year}학년`} • {course.category} • {course.credits}학점 • {course.id}
+              </p>
+            </div>
+          )
+        })}
       </div>
     </div>
   )

@@ -163,13 +163,13 @@ export default function WeeklyTimetable() {
       {/* 요일 헤더 */}
       <div className="flex flex-shrink-0" style={{ backgroundColor: 'var(--surface)', height: `${HEADER_ROW_H}px` }}>
         <div
-          className="w-14 flex-shrink-0"
+          className="w-10 sm:w-14 flex-shrink-0"
           style={{ borderRight: '1px solid var(--border)' }}
         />
         {DAYS.map((day, i) => (
           <div
             key={day}
-            className="flex-1 text-center text-sm font-semibold py-2"
+            className="flex-1 text-center text-xs sm:text-sm font-semibold py-2"
             style={{
               color: 'var(--primary)',
               borderRight: i < DAYS.length - 1 ? '1px solid var(--border)' : 'none',
@@ -184,7 +184,7 @@ export default function WeeklyTimetable() {
       <div className="flex flex-1 min-h-0">
         {/* 시간 라벨 열 (sticky left) */}
         <div
-          className="w-14 flex-shrink-0 sticky left-0 z-5 relative"
+          className="w-10 sm:w-14 flex-shrink-0 sticky left-0 z-5 relative"
           style={{
             borderRight: '1px solid var(--border)',
             backgroundColor: 'var(--surface)',
@@ -193,7 +193,7 @@ export default function WeeklyTimetable() {
           {Array.from({ length: TOTAL_HOURS }, (_, i) => (
             <div
               key={i}
-              className="absolute text-xs text-slate-400 text-right w-full pr-2"
+              className="absolute text-[10px] sm:text-xs text-slate-400 text-right w-full pr-1 sm:pr-2"
               style={{ top: `calc(${(i / TOTAL_HOURS) * 100}% + 3px)` }}
             >
               {String(START_HOUR + i).padStart(2, '0')}:00
@@ -256,13 +256,13 @@ export default function WeeklyTimetable() {
                     </button>
 
                     {/* 과목명 */}
-                    <p className="font-semibold break-words" style={{ color: block.isConflict ? '#dc2626' : 'white', fontSize: '13px', lineHeight: '18px' }}>
+                    <p className="font-semibold break-words text-[11px] sm:text-[13px]" style={{ color: block.isConflict ? '#dc2626' : 'white', lineHeight: '1.3' }}>
                       {block.courseName}
                     </p>
 
                     {/* 강의실 */}
                     {heightPx > 30 && (
-                      <p className="break-words" style={{ color: block.isConflict ? '#991b1b' : 'white', fontSize: '12px', lineHeight: '16px', opacity: 0.9, marginTop: '2px' }}>
+                      <p className="break-words text-[10px] sm:text-xs" style={{ color: block.isConflict ? '#991b1b' : 'white', lineHeight: '1.3', opacity: 0.9, marginTop: '2px' }}>
                         {block.room}
                       </p>
                     )}
