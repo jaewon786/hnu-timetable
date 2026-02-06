@@ -29,11 +29,12 @@ function renderTimeBlocks(course: Course) {
             {groupLabels[i] ?? `그룹${i}`}
           </span>
         )}
-        <div className="mt-0.5 space-y-0.5">
+        <div className="mt-0.5 space-y-2">
           {sorted.map((tb, j) => (
-            <div key={j} className="flex items-center gap-3 text-sm text-slate-700">
-              <span className="w-16 font-medium">{tb.day} {tb.startTime}~{tb.endTime}</span>
-              <span className="text-slate-400">강의실: {tb.room}</span>
+            <div key={j} className="text-sm text-slate-700">
+              <div className="font-medium">{tb.day}</div>
+              <div>{tb.startTime} ~ {tb.endTime}</div>
+              <div className="mt-1 text-slate-700">강의실        {tb.room}</div>
             </div>
           ))}
         </div>
@@ -220,7 +221,7 @@ export default function CourseDetailModal({ course, onClose }: Props) {
 function InfoRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex gap-3">
-      <span className="text-xs font-semibold text-slate-500 flex-shrink-0" style={{ width: '64px', paddingTop: '1px' }}>{label}</span>
+      <span className="text-xs font-semibold text-slate-500 flex-shrink-0 whitespace-nowrap" style={{ minWidth: '80px', paddingTop: '1px' }}>{label}</span>
       <span className="text-sm text-slate-700">{children}</span>
     </div>
   )
