@@ -311,7 +311,7 @@ export default function CourseList({ courses, onCourseClick, categories = [] }: 
       </div>
 
       {/* 모바일: 카드 리스트 */}
-      <div className="flex lg:hidden flex-col h-full overflow-auto gap-2 p-2">
+      <div className="flex lg:hidden flex-col h-full overflow-auto gap-1.5 p-2">
         {courses.length === 0 ? (
           <div className="flex items-center justify-center h-full">
             <p className="text-sm text-slate-400">필터 조건에 맞는 강의가 없습니다.</p>
@@ -333,43 +333,41 @@ export default function CourseList({ courses, onCourseClick, categories = [] }: 
             <div
               key={course.id}
               onClick={() => onCourseClick(course)}
-              className="rounded-lg p-3 cursor-pointer transition-all"
+              className="rounded-lg p-2 cursor-pointer transition-all"
               style={{
                 backgroundColor: selected ? selected.color + '10' : 'var(--card)',
                 border: selected ? `2px solid ${selected.color}` : '1px solid var(--border)',
               }}
             >
               {/* 과목명 */}
-              <div className="flex items-start justify-between gap-2 mb-1">
-                <h3 className="font-semibold text-sm text-slate-800 flex-1">
+              <div className="flex items-start justify-between gap-2 mb-0.5">
+                <h3 className="font-semibold text-xs text-slate-800 flex-1">
                   {course.name}
                   {isConflict && (
-                    <span className="ml-1 text-xs px-1 py-0.5 rounded" style={{ backgroundColor: '#fef2f2', color: '#dc2626' }}>
-                      ⚠ 충돌
+                    <span className="ml-1 text-[10px] px-1 py-0.5 rounded" style={{ backgroundColor: '#fef2f2', color: '#dc2626' }}>
+                      ⚠
                     </span>
                   )}
                 </h3>
                 {selected && (
                   <div className="flex items-center gap-0.5">
-                    <div className="w-1.5 h-4 rounded-full" style={{ backgroundColor: selected.color }} />
-                    <span className="text-xs font-bold" style={{ color: selected.color }}>✓</span>
+                    <div className="w-1 h-3 rounded-full" style={{ backgroundColor: selected.color }} />
+                    <span className="text-[10px] font-bold" style={{ color: selected.color }}>✓</span>
                   </div>
                 )}
               </div>
 
               {/* 교수명 */}
-              <p className="text-xs text-slate-600 mb-2">
+              <p className="text-[10px] text-slate-600 mb-1">
                 {course.professors.length > 0 ? course.professors.join(', ') : '교수 미정'}
               </p>
 
-              {/* 시간 */}
-              <p className="text-xs text-slate-700 mb-1">{timeInfo}</p>
-
-              {/* 강의실 */}
-              <p className="text-xs text-slate-600 mb-2">{roomInfo}</p>
+              {/* 시간 + 강의실 */}
+              <p className="text-[10px] text-slate-700 mb-0.5">{timeInfo}</p>
+              <p className="text-[10px] text-slate-600 mb-1">{roomInfo}</p>
 
               {/* 하단 정보 */}
-              <p className="text-[10px] text-slate-500">
+              <p className="text-[9px] text-slate-500">
                 {course.year === '전체' ? '전체' : `${course.year}학년`} • {course.category} • {course.credits}학점 • {course.id}
               </p>
             </div>

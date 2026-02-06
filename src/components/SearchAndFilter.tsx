@@ -29,6 +29,7 @@ interface Props {
 
 export default function SearchAndFilter({ filter, onChange, colleges }: Props) {
   const [isCollegeOpen, setIsCollegeOpen] = useState(false)
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false)
   const collegeRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -185,7 +186,7 @@ export default function SearchAndFilter({ filter, onChange, colleges }: Props) {
       {/* 모바일 간단 필터 */}
       <div className="lg:hidden mt-2">
         <div className="flex flex-wrap gap-1">
-          {CATEGORIES.slice(0, 6).map(cat => (
+          {CATEGORIES.map(cat => (
             <button
               key={cat}
               onClick={() => onChange({ ...filter, categories: [cat] })}
@@ -199,6 +200,168 @@ export default function SearchAndFilter({ filter, onChange, colleges }: Props) {
             </button>
           ))}
         </div>
+
+        {/* 상세 필터 토글 */}
+        <button
+          onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}
+          className="w-full mt-2 py-1.5 text-xs text-slate-600 flex items-center justify-center gap-1 rounded"
+          style={{ backgroundColor: '#f1f5f9' }}
+        >
+          <span>상세 필터</span>
+          <svg 
+            className="w-3 h-3 transition-transform" 
+            style={{ transform: isMobileFilterOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        {/* 확장 필터 */}
+        {isMobileFilterOpen && (
+          <div className="mt-2 space-y-2 p-2 rounded" style={{ backgroundColor: '#f8fafc' }}>
+            {/* 단과대학 */}
+            <div>
+              <p className="text-xs font-semibold text-slate-600 mb-1">단과대학</p>
+              <div ref={collegeRef} className="relative">
+                <button
+                  onClick={() => setIsCollegeOpen(!isCollegeOpen)}
+                  className="w-full px-2 py-1 rounded text-xs text-left flex items-center justify-between"
+                  style={{
+                    border: '1px solid var(--border)',
+                    backgroundColor: 'var(--card)',
+                    color: filter.colleges.length > 0 ? 'var(--primary)' : '#475569'
+                  }}
+                >
+                  <span>{filter.colleges.length > 0 ? `${filter.colleges.length}개 선택` : '전체'}</span>
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {isCollegeOpen && (
+                  <div
+                    className="absolute z-20 mt-1 w-full rounded shadow-lg"
+                    style={{
+                      backgroundColor: 'var(--card)',
+                      border: '1px solid var(--border)',
+                      maxHeight: '150px',
+                      overflowY: 'auto',
+                    }}
+                  >
+                    <label className="flex items-center gap-2 px-2 py-1 text-xs cursor-pointer hover:bg-slate-50">
+                      <input
+                        type="checkbox"
+                        checked={colleges.length > 0 && filter.colleges.length === colleges.length}
+                        onChange={() => onChange({
+                          ...filter,
+                          colleges: filter.colleges.length === colleges.length ? [] : [...colleges],
+                        })}
+                      />
+                      <span className="font-semibold">전체</span>
+                    </label>
+                    {colleges.map(college => (
+                      <label
+                        key={college}
+                        className="flex items-center gap-2 px-2 py-1 text-xs cursor-pointer hover:bg-slate-50"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={filter.colleges.includes(college)}
+                          onChange={() => onChange({ ...filter, colleges: toggleItem(filter.colleges, college) })}
+                        />
+                        <span>{college}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* 학년 */}
+            <div>
+              <p className="text-xs font-semibold text-slate-600 mb-1">학년</p>
+              <div className="flex flex-wrap gap-1">
+                {YEARS.map(year => (
+                  <button
+                    key={year}
+                    onClick={() => onChange({ ...filter, years: toggleItem(filter.years, year) })}
+                    className="px-2 py-0.5 rounded text-xs font-medium"
+                    style={{
+                      backgroundColor: filter.years.includes(year) ? 'var(--primary)' : '#f1f5f9',
+                      color: filter.years.includes(year) ? 'white' : '#475569',
+                    }}
+                  >
+                    {year === '전체' ? '전체' : `${year}학년`}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 요일 */}
+            <div>
+              <p className="text-xs font-semibold text-slate-600 mb-1">요일</p>
+              <div className="flex gap-1">
+                {WEEKDAYS.map(day => (
+                  <button
+                    key={day}
+                    onClick={() => onChange({ ...filter, days: toggleItem(filter.days, day) })}
+                    className="flex-1 py-0.5 rounded text-xs font-medium"
+                    style={{
+                      backgroundColor: filter.days.includes(day) ? 'var(--primary)' : '#f1f5f9',
+                      color: filter.days.includes(day) ? 'white' : '#475569',
+                    }}
+                  >
+                    {day}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 학점 */}
+            <div>
+              <p className="text-xs font-semibold text-slate-600 mb-1">학점</p>
+              <div className="flex flex-wrap gap-1">
+                {CREDITS.map(credit => (
+                  <button
+                    key={credit}
+                    onClick={() => onChange({ ...filter, credits: toggleItem(filter.credits, credit) })}
+                    className="px-2 py-0.5 rounded text-xs font-medium"
+                    style={{
+                      backgroundColor: filter.credits.includes(credit) ? 'var(--primary)' : '#f1f5f9',
+                      color: filter.credits.includes(credit) ? 'white' : '#475569',
+                    }}
+                  >
+                    {credit}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 시간확정 체크 */}
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={filter.timeConfirmedOnly}
+                onChange={e => onChange({ ...filter, timeConfirmedOnly: e.target.checked })}
+              />
+              <span className="text-xs text-slate-700">시간 확정된 강의만</span>
+            </label>
+
+            {/* 초기화 버튼 */}
+            {hasActiveFilter(filter) && (
+              <button
+                onClick={() => onChange(INITIAL_FILTER)}
+                className="w-full py-1 text-xs rounded"
+                style={{ backgroundColor: '#fee2e2', color: '#dc2626' }}
+              >
+                필터 초기화
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* 하단: 시간확정 체크 + 초기화 */}
