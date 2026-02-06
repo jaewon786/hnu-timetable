@@ -1,0 +1,42 @@
+{
+  "name": "hnu-timetable",
+  "private": false,
+  "version": "1.0.0",
+  "description": "한남대학교 시간표 조합 웹 애플리케이션",
+  "author": "Jaewo",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/hnu-timetable.git"
+  },
+  "keywords": [
+    "hannam",
+    "university",
+    "timetable",
+    "schedule",
+    "education"
+  ],
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zustand": "^4.5.5",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.6",
+    "@vitejs/plugin-react": "^4.3.4",
+    "tailwindcss": "^4.0.0",
+    "typescript": "~5.9.3",
+    "vite": "^7.2.4",
+    "vitest": "^3.0.0"
+  }
+}

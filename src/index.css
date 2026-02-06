@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #6366f1;
+  --primary-hover: #5558e3;
+  --surface: #f0f4f8;
+  --card: #ffffff;
+  --accent: #f59e0b;
+  --accent-hover: #d97706;
+  --border: #cbd5e1;
+  --error: #ef4444;
+  --success: #22c55e;
+  --radius: 0.5rem;
+  --radius-lg: 0.75rem;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+}
