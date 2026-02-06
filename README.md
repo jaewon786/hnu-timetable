@@ -113,19 +113,7 @@ src/
 
 ## 🐛 알려진 이슈
 
-- [ ] 토요일 시간표 지원 미흡
-- [ ] 모바일 환경에서 가로 스크롤 최적화 필요
-- [ ] Excel 파일 크기 제한 필요
-
-## 🤝 기여하기
-
-버그 리포트, 기능 제안, Pull Request 모두 환영합니다!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+- [ ] 모바일 환경 제공 안됨
 
 ## 📜 라이선스
 
@@ -135,8 +123,6 @@ src/
 ## 🙏 감사의 말
 
 - 한남대학교 학생들의 피드백
-- 에브리타임 UI 디자인 영감
-- React, Vite, Tailwind CSS 커뮤니티
 
 ## 📬 문의
 
