@@ -2,7 +2,7 @@ import { type Course } from '../../types/index.ts'
 
 // 온라인강좌
 export const ONLINE_COURSES: Course[] = [
-{
+  {
     id: '24258-1',
     code: '24258',
     section: '01',
