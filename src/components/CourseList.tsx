@@ -321,8 +321,8 @@ export default function CourseList({ courses, onCourseClick, categories = [] }: 
           const isConflict = conflictCourseIds.has(course.id)
           
           // 시간 정보 생성
-          const timeInfo = course.isTimeConfirmed && course.timeBlocks.length > 0
-            ? course.timeBlocks.map(tb => `${tb.day}${tb.startTime.slice(0,2)}`).join(',')
+          const timeInfo = course.isTimeConfirmed && course.timeRaw
+            ? course.timeRaw
             : '미정'
           
           const roomInfo = course.isTimeConfirmed && course.roomRaw 
