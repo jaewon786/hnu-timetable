@@ -245,9 +245,12 @@ export default function WeeklyTimetable() {
                 const widthPct = 100 / block.totalCols
 
                 return (
-                  <button
+                  <div
                     key={idx}
                     onClick={() => setSelectedCourseId(block.courseId)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedCourseId(block.courseId) }}
                     aria-label={`${block.courseName} 상세 정보 보기`}
                     className="absolute overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
                     style={{
@@ -293,7 +296,7 @@ export default function WeeklyTimetable() {
                         {block.room}
                       </p>
                     )}
-                  </button>
+                  </div>
                 )
               })}
             </div>

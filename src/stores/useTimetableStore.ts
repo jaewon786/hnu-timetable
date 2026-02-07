@@ -28,6 +28,7 @@ interface TimetableState {
   forceAdd: (course: Course) => void
   cancelPending: () => void
   removeCourse: (courseId: string) => void
+  clearAllCourses: () => void
   isCourseSelected: (courseId: string) => boolean
   initFromStorage: (selectedCourses: SelectedCourse[]) => void
 }
@@ -113,6 +114,10 @@ const useTimetableStore = create<TimetableState>((set, get) => ({
     set(state => ({
       selectedCourses: state.selectedCourses.filter(sc => sc.course.id !== courseId),
     }))
+  },
+
+  clearAllCourses: () => {
+    set({ selectedCourses: [], pendingConflict: null })
   },
 
   isCourseSelected: (courseId: string) => {

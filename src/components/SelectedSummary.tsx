@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import useTimetableStore from '../stores/useTimetableStore.ts'
 import CustomCourseModal from './CustomCourseModal.tsx'
+import TimetableManagerModal from './TimetableManagerModal.tsx'
 
 /** creditDetail "학-강-실" 문자열에서 강·실 숫자를 추출 */
 function parseCreditDetail(detail: string): { lecture: number; lab: number } {
@@ -15,25 +16,40 @@ export default function SelectedSummary() {
   const selectedCourses = useTimetableStore((s) => s.selectedCourses)
   const removeCourse    = useTimetableStore((s) => s.removeCourse)
   const [showCustomModal, setShowCustomModal] = useState(false)
+  const [showManagerModal, setShowManagerModal] = useState(false)
 
   if (selectedCourses.length === 0) {
     return (
       <>
         <div className="rounded-lg p-3 sm:p-4" style={{ backgroundColor: 'var(--card)', border: '1px solid var(--border)' }}>
           <p className="text-xs sm:text-sm text-slate-400 text-center py-2">아직 선택한 강의가 없습니다</p>
-          <button
-            onClick={() => setShowCustomModal(true)}
-            className="w-full mt-2 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-1"
-            style={{
-              backgroundColor: 'var(--surface)',
-              color: 'var(--primary)',
-              border: '1px dashed var(--primary)',
-            }}
-          >
-            <span>+</span> 직접 강의 추가
-          </button>
+          <div className="flex gap-2 mt-2">
+            <button
+              onClick={() => setShowCustomModal(true)}
+              className="flex-1 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-1"
+              style={{
+                backgroundColor: 'var(--surface)',
+                color: 'var(--primary)',
+                border: '1px dashed var(--primary)',
+              }}
+            >
+              <span>+</span> 직접 추가
+            </button>
+            <button
+              onClick={() => setShowManagerModal(true)}
+              className="flex-1 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-1"
+              style={{
+                backgroundColor: 'var(--surface)',
+                color: '#6366f1',
+                border: '1px solid #6366f1',
+              }}
+            >
+              📂 불러오기
+            </button>
+          </div>
         </div>
         {showCustomModal && <CustomCourseModal onClose={() => setShowCustomModal(false)} />}
+        {showManagerModal && <TimetableManagerModal onClose={() => setShowManagerModal(false)} />}
       </>
     )
   }
@@ -98,9 +114,22 @@ export default function SelectedSummary() {
           >
             + 직접 추가
           </button>
+          {/* 시간표 관리 버튼 */}
+          <button
+            onClick={() => setShowManagerModal(true)}
+            className="inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-medium transition-colors"
+            style={{
+              backgroundColor: 'var(--surface)',
+              color: '#6366f1',
+              border: '1px solid #6366f1',
+            }}
+          >
+            📂 저장/불러오기
+          </button>
         </div>
       </div>
       {showCustomModal && <CustomCourseModal onClose={() => setShowCustomModal(false)} />}
+      {showManagerModal && <TimetableManagerModal onClose={() => setShowManagerModal(false)} />}
     </>
   )
 }
