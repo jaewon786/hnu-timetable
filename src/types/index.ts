@@ -32,6 +32,7 @@ export interface Course {
   capacity?: string          // 수강인원 제한
   organizer?: string         // 운영 기관 (온라인강좌)
   partnerUniversity?: string // 협력대학 (온라인강좌)
+  isCustom?: boolean         // 사용자 직접 추가 강의 여부
 }
 
 export interface Semester {
