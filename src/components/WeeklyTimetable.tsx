@@ -2,6 +2,7 @@ import useTimetableStore from '../stores/useTimetableStore.ts'
 import { type DayOfWeek } from '../types/index.ts'
 import { computeAllConflicts } from '../utils/detectConflict.ts'
 import { useMemo, useRef, useEffect, useState } from 'react'
+import CourseDetailModal from './CourseDetailModal.tsx'
 
 const DAYS: DayOfWeek[] = ['월', '화', '수', '목', '금']
 const START_HOUR = 8
@@ -141,6 +142,7 @@ function layoutBlocks(
 export default function WeeklyTimetable() {
   const selectedCourses = useTimetableStore((s) => s.selectedCourses)
   const removeCourse = useTimetableStore((s) => s.removeCourse)
+  const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null)
 
   const containerRef = useRef<HTMLDivElement>(null)
   const [pxPerHour, setPxPerHour] = useState(60)
@@ -158,7 +160,18 @@ export default function WeeklyTimetable() {
   const conflictCourseIds = useMemo(() => computeAllConflicts(selectedCourses), [selectedCourses])
   const dayBlocks = layoutBlocks(selectedCourses, conflictCourseIds)
 
+  const selectedCourse = selectedCourseId
+    ? selectedCourses.find(sc => sc.course.id === selectedCourseId)?.course
+    : null
+
   return (
+    <>
+      {selectedCourse && (
+        <CourseDetailModal
+          course={selectedCourse}
+          onClose={() => setSelectedCourseId(null)}
+        />
+      )}
     <div ref={containerRef} className="rounded-lg overflow-hidden flex-1 min-h-0 flex flex-col" style={{ border: '1px solid var(--border)' }}>
       {/* 요일 헤더 */}
       <div className="flex flex-shrink-0" style={{ backgroundColor: 'var(--surface)', height: `${HEADER_ROW_H}px` }}>
@@ -232,9 +245,11 @@ export default function WeeklyTimetable() {
                 const widthPct = 100 / block.totalCols
 
                 return (
-                  <div
+                  <button
                     key={idx}
-                    className="absolute overflow-hidden"
+                    onClick={() => setSelectedCourseId(block.courseId)}
+                    aria-label={`${block.courseName} 상세 정보 보기`}
+                    className="absolute overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
                     style={{
                       top: `${topPct}%`,
                       height: `${heightPct}%`,
@@ -243,30 +258,42 @@ export default function WeeklyTimetable() {
                       backgroundColor: block.isConflict ? '#fef2f2' : block.color,
                       border: block.isConflict ? '2px dashed #dc2626' : `1px solid ${block.color}`,
                       padding: '3px 4px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'flex-start',
+                      justifyContent: 'flex-start',
+                      textAlign: 'left',
                     }}
                   >
-                    {/* 삭제 버튼 (우측 상단) */}
+                    {/* 삭제 버튼 (태블릿 이상에서만 표시) */}
                     <button
-                      onClick={() => removeCourse(block.courseId)}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        removeCourse(block.courseId)
+                      }}
                       aria-label={`${block.courseName} 제거`}
-                      className="absolute top-0.5 right-0.5 w-4 h-4 flex items-center justify-center text-xs leading-none opacity-60 hover:opacity-100 transition-opacity"
-                      style={{ color: block.isConflict ? '#dc2626' : 'white', backgroundColor: block.isConflict ? 'rgba(255,255,255,0.85)' : 'rgba(0,0,0,0.2)' }}
+                      className="hidden md:flex absolute top-0.5 right-0.5 w-4 h-4 items-center justify-center text-xs leading-none opacity-60 hover:opacity-100 transition-opacity z-10"
+                      style={{ 
+                        color: block.isConflict ? '#dc2626' : 'white', 
+                        backgroundColor: block.isConflict ? 'rgba(255,255,255,0.85)' : 'rgba(0,0,0,0.2)',
+                        borderRadius: '2px',
+                      }}
                     >
                       ×
                     </button>
 
                     {/* 과목명 */}
-                    <p className="font-semibold break-words text-[11px] sm:text-[13px]" style={{ color: block.isConflict ? '#dc2626' : 'white', lineHeight: '1.3' }}>
+                    <p className="font-semibold break-words text-[11px] sm:text-[13px] text-left" style={{ color: block.isConflict ? '#dc2626' : 'white', lineHeight: '1.3' }}>
                       {block.courseName}
                     </p>
 
                     {/* 강의실 */}
                     {heightPx > 30 && (
-                      <p className="break-words text-[10px] sm:text-xs" style={{ color: block.isConflict ? '#991b1b' : 'white', lineHeight: '1.3', opacity: 0.9, marginTop: '2px' }}>
+                      <p className="break-words text-[10px] sm:text-xs text-left" style={{ color: block.isConflict ? '#991b1b' : 'white', lineHeight: '1.3', opacity: 0.9, marginTop: '2px' }}>
                         {block.room}
                       </p>
                     )}
-                  </div>
+                  </button>
                 )
               })}
             </div>
@@ -274,5 +301,6 @@ export default function WeeklyTimetable() {
         })}
       </div>
     </div>
+    </>
   )
 }
