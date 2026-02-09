@@ -1,5 +1,16 @@
 import { type Course, type FilterState } from '../types/index.ts'
 
+/** 단과대학명의 구분자(·, ㆍ, .)를 통일하여 비교할 수 있도록 정규화 */
+function normalizeCollege(name: string): string {
+  return name.replace(/[·ㆍ.]/g, '')
+}
+
+/** course.college가 쉼표로 복수 대학을 포함할 수 있으므로, 선택된 대학 중 하나라도 매칭되면 true */
+function matchesCollege(courseCollege: string, selectedColleges: string[]): boolean {
+  const courseColleges = courseCollege.split(',').map(c => normalizeCollege(c.trim()))
+  return selectedColleges.some(sel => courseColleges.includes(normalizeCollege(sel)))
+}
+
 export const INITIAL_FILTER: FilterState = {
   keyword: '',
   categories: ['교필'],
@@ -44,7 +55,7 @@ export function filterCourses(courses: Course[], filter: FilterState): Course[] 
       if (!shouldInclude) return false
     }
     
-    if (filter.colleges.length > 0 && !filter.colleges.includes(course.college)) return false
+    if (filter.colleges.length > 0 && !matchesCollege(course.college, filter.colleges)) return false
     if (filter.departments.length > 0 && !filter.departments.includes(course.department)) return false
     if (filter.years.length > 0) {
       const courseYears = course.year.split(',').map(y => y.trim())
