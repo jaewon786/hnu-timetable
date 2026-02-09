@@ -67,7 +67,7 @@ export default function SearchAndFilter({ filter, onChange, colleges }: Props) {
       {/* 키워드 검색 */}
       <input
         type="text"
-        placeholder="과목명, 교수명 검색..."
+        placeholder="과목명, 교수명, 학수번호-분반 검색..."
         value={filter.keyword}
         onChange={e => onChange({ ...filter, keyword: e.target.value })}
         className="w-full px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm text-slate-700"

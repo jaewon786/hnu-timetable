@@ -18,7 +18,8 @@ export function filterCourses(courses: Course[], filter: FilterState): Course[] 
       const inName = course.name.toLowerCase().includes(kw)
       const inProf = course.professors.some(p => p.toLowerCase().includes(kw))
       const inDept = course.department.toLowerCase().includes(kw)
-      if (!inName && !inProf && !inDept) return false
+      const inId = course.id.toLowerCase().includes(kw)
+      if (!inName && !inProf && !inDept && !inId) return false
     }
     
     // 이수구분 필터: 교선을 선택하면 온라인강좌(organizer가 '교수학습원격교육센터')도 함께 검색
