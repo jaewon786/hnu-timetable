@@ -2636,7 +2636,7 @@ export const SEMESTER_COURSES: Course[] = [
     id: '26626-8',
     code: '26626',
     section: '08',
-    name: '전공탐색세미나(공학전공탐색·설계프로젝트)',
+    name: '전공탐색세미나(공학전공탐색ㆍ설계프로젝트)',
     college: '공과대학',
     department: '공과대학자유전공학부',
     major: '공과대학자유전공학부',

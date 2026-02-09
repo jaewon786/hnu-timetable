@@ -8,7 +8,7 @@ export const COLLEGE_DEPARTMENTS: Record<string, string[]> = {
     '컴퓨터공학과',
     '스마트융합대학자유전공학부',
   ],
-  '생명.나노과학대학': [
+  '생명ㆍ나노과학대학': [
     '간호학과',
     '바이오제약공학과',
     '생명나노과학대학자유전공학부',
@@ -83,7 +83,7 @@ export const COLLEGE_DEPARTMENTS: Record<string, string[]> = {
     '패션디자인학과',
     '회화과',
   ],
-  '취업.창업처(대학일자리플러스센터)': [
+  '취업ㆍ창업처(대학일자리플러스센터)': [
     '창업지원단',
   ],
 }
