@@ -45,6 +45,7 @@ export interface FilterState {
   keyword: string
   categories: string[]       // 이수구분
   colleges: string[]         // 단과대학
+  departments: string[]      // 학과
   years: string[]            // 학년
   days: DayOfWeek[]          // 요일
   credits: number[]          // 학점

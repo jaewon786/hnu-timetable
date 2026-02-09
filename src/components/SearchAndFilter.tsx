@@ -1,6 +1,7 @@
-import { useRef, useState, useEffect, type ReactNode } from 'react'
+import { useRef, useState, useEffect, useMemo, type ReactNode } from 'react'
 import { type FilterState, type DayOfWeek } from '../types/index.ts'
 import { INITIAL_FILTER } from '../utils/filterCourses.ts'
+import { COLLEGE_DEPARTMENTS } from '../constants/collegeDepartments.ts'
 
 const CATEGORIES = ['교필', '교선', '전필', '전선', '온라인', '학기', '교직', '일선', '코드쉐어', '마이크로디그리']
 const YEARS = ['1', '2', '3', '4', '5', '전체']
@@ -15,6 +16,7 @@ function hasActiveFilter(f: FilterState): boolean {
   return f.keyword !== ''
     || f.categories.join(',') !== INITIAL_FILTER.categories.join(',')
     || f.colleges.length > 0
+    || f.departments.length > 0
     || f.years.length > 0
     || f.days.length > 0
     || f.credits.length > 0
@@ -29,13 +31,31 @@ interface Props {
 
 export default function SearchAndFilter({ filter, onChange, colleges }: Props) {
   const [isCollegeOpen, setIsCollegeOpen] = useState(false)
+  const [isDeptOpen, setIsDeptOpen] = useState(false)
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false)
   const collegeRef = useRef<HTMLDivElement>(null)
+  const deptRef = useRef<HTMLDivElement>(null)
+
+  // 선택된 단과대학에 해당하는 학과 목록
+  const availableDepartments = useMemo(() => {
+    if (filter.colleges.length === 0) return []
+    return filter.colleges.flatMap(c => COLLEGE_DEPARTMENTS[c] ?? [])
+  }, [filter.colleges])
+
+  // 단과대학 변경 시 해당하지 않는 학과 제거
+  const handleCollegeChange = (newColleges: string[]) => {
+    const newAvailDepts = newColleges.flatMap(c => COLLEGE_DEPARTMENTS[c] ?? [])
+    const newDepts = filter.departments.filter(d => newAvailDepts.includes(d))
+    onChange({ ...filter, colleges: newColleges, departments: newDepts })
+  }
 
   useEffect(() => {
     function onMouseDown(e: MouseEvent) {
       if (collegeRef.current && !collegeRef.current.contains(e.target as Node)) {
         setIsCollegeOpen(false)
+      }
+      if (deptRef.current && !deptRef.current.contains(e.target as Node)) {
+        setIsDeptOpen(false)
       }
     }
     document.addEventListener('mousedown', onMouseDown)
@@ -101,10 +121,9 @@ export default function SearchAndFilter({ filter, onChange, colleges }: Props) {
                     <input
                       type="checkbox"
                       checked={colleges.length > 0 && filter.colleges.length === colleges.length}
-                      onChange={() => onChange({
-                        ...filter,
-                        colleges: filter.colleges.length === colleges.length ? [] : [...colleges],
-                      })}
+                      onChange={() => handleCollegeChange(
+                        filter.colleges.length === colleges.length ? [] : [...colleges],
+                      )}
                     />
                     <span className="text-sm font-semibold text-slate-700">모든 대학</span>
                   </label>
@@ -117,7 +136,7 @@ export default function SearchAndFilter({ filter, onChange, colleges }: Props) {
                       <input
                         type="checkbox"
                         checked={filter.colleges.includes(college)}
-                        onChange={() => onChange({ ...filter, colleges: toggleItem(filter.colleges, college) })}
+                        onChange={() => handleCollegeChange(toggleItem(filter.colleges, college))}
                       />
                       <span className="text-sm text-slate-700">{college}</span>
                     </label>
@@ -125,6 +144,63 @@ export default function SearchAndFilter({ filter, onChange, colleges }: Props) {
                 </div>
               )}
             </div>
+
+            {/* 학과 드롭다운 */}
+            {availableDepartments.length > 0 && (
+              <div ref={deptRef} className="relative">
+                <button
+                  onClick={() => setIsDeptOpen(s => !s)}
+                  className="px-2.5 py-1 rounded-md text-sm font-medium transition-colors"
+                  style={{
+                    border: '1px solid var(--border)',
+                    backgroundColor: filter.departments.length > 0 ? 'var(--primary)' : '#f1f5f9',
+                    color: filter.departments.length > 0 ? 'white' : '#475569',
+                  }}
+                >
+                  학과 ▾
+                </button>
+
+                {isDeptOpen && (
+                  <div
+                    className="absolute z-20 mt-1 rounded-lg shadow-lg"
+                    style={{
+                      backgroundColor: 'var(--card)',
+                      border: '1px solid var(--border)',
+                      maxHeight: '200px',
+                      overflowY: 'auto',
+                      minWidth: '220px',
+                    }}
+                  >
+                    {/* 모든 학과 */}
+                    <label className="flex items-center gap-2 px-3 py-1.5 cursor-pointer hover:bg-slate-50">
+                      <input
+                        type="checkbox"
+                        checked={availableDepartments.length > 0 && filter.departments.length === availableDepartments.length}
+                        onChange={() => onChange({
+                          ...filter,
+                          departments: filter.departments.length === availableDepartments.length ? [] : [...availableDepartments],
+                        })}
+                      />
+                      <span className="text-sm font-semibold text-slate-700">모든 학과</span>
+                    </label>
+                    <div style={{ borderTop: '1px solid var(--border)' }} />
+                    {availableDepartments.map(dept => (
+                      <label
+                        key={dept}
+                        className="flex items-center gap-2 px-3 py-1.5 cursor-pointer hover:bg-slate-50"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={filter.departments.includes(dept)}
+                          onChange={() => onChange({ ...filter, departments: toggleItem(filter.departments, dept) })}
+                        />
+                        <span className="text-sm text-slate-700">{dept}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* 선택된 단과대학 태그 */}
             {filter.colleges.map(college => (
@@ -136,7 +212,23 @@ export default function SearchAndFilter({ filter, onChange, colleges }: Props) {
                 {college}
                 <button
                   type="button"
-                  onClick={() => onChange({ ...filter, colleges: filter.colleges.filter(c => c !== college) })}
+                  onClick={() => handleCollegeChange(filter.colleges.filter(c => c !== college))}
+                  className="leading-none hover:opacity-70"
+                >×</button>
+              </span>
+            ))}
+
+            {/* 선택된 학과 태그 */}
+            {filter.departments.map(dept => (
+              <span
+                key={dept}
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium"
+                style={{ backgroundColor: '#f0fdf4', color: '#16a34a' }}
+              >
+                {dept}
+                <button
+                  type="button"
+                  onClick={() => onChange({ ...filter, departments: filter.departments.filter(d => d !== dept) })}
                   className="leading-none hover:opacity-70"
                 >×</button>
               </span>
@@ -255,10 +347,9 @@ export default function SearchAndFilter({ filter, onChange, colleges }: Props) {
                       <input
                         type="checkbox"
                         checked={colleges.length > 0 && filter.colleges.length === colleges.length}
-                        onChange={() => onChange({
-                          ...filter,
-                          colleges: filter.colleges.length === colleges.length ? [] : [...colleges],
-                        })}
+                        onChange={() => handleCollegeChange(
+                          filter.colleges.length === colleges.length ? [] : [...colleges],
+                        )}
                       />
                       <span className="font-semibold">전체</span>
                     </label>
@@ -270,7 +361,7 @@ export default function SearchAndFilter({ filter, onChange, colleges }: Props) {
                         <input
                           type="checkbox"
                           checked={filter.colleges.includes(college)}
-                          onChange={() => onChange({ ...filter, colleges: toggleItem(filter.colleges, college) })}
+                          onChange={() => handleCollegeChange(toggleItem(filter.colleges, college))}
                         />
                         <span>{college}</span>
                       </label>
@@ -279,6 +370,28 @@ export default function SearchAndFilter({ filter, onChange, colleges }: Props) {
                 )}
               </div>
             </div>
+
+            {/* 학과 (모바일) */}
+            {availableDepartments.length > 0 && (
+              <div>
+                <p className="text-xs font-semibold text-slate-600 mb-1">학과</p>
+                <div className="flex flex-wrap gap-1">
+                  {availableDepartments.map(dept => (
+                    <button
+                      key={dept}
+                      onClick={() => onChange({ ...filter, departments: toggleItem(filter.departments, dept) })}
+                      className="px-2 py-0.5 rounded text-xs font-medium transition-colors"
+                      style={{
+                        backgroundColor: filter.departments.includes(dept) ? '#16a34a' : '#f1f5f9',
+                        color: filter.departments.includes(dept) ? 'white' : '#475569',
+                      }}
+                    >
+                      {dept}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* 학년 */}
             <div>

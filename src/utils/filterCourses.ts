@@ -4,6 +4,7 @@ export const INITIAL_FILTER: FilterState = {
   keyword: '',
   categories: ['교필'],
   colleges: [],
+  departments: [],
   years: [],
   days: [],
   credits: [],
@@ -43,6 +44,7 @@ export function filterCourses(courses: Course[], filter: FilterState): Course[] 
     }
     
     if (filter.colleges.length > 0 && !filter.colleges.includes(course.college)) return false
+    if (filter.departments.length > 0 && !filter.departments.includes(course.department)) return false
     if (filter.years.length > 0) {
       const courseYears = course.year.split(',').map(y => y.trim())
       if (!filter.years.some(y => courseYears.includes(y))) return false
