@@ -1,6 +1,7 @@
 # 🎓 HNU Timetable
 
 한남대학교 학생들을 위한 시간표 조합 웹 애플리케이션
+https://hnu-timetable.vercel.app/
 
 ## ✨ 주요 기능
 
